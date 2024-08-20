@@ -1,11 +1,24 @@
+
+"use client";
+
 import Link from "next/link";
-import Image from "next/image";
-import React from "react";
-// import NavItems from "./NavItems";
-// import MobileNav from "./MobileNav";
 import NavBar from "@/components/shared/Navbar";
+import React, { useState } from "react";
+import SignIn from "@/app/(auth)/sign-in/page";
+
+
 
 const Header = () => {
+
+   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
+
+   const handleSignInModalOpen = () => {
+     setIsSignInModalOpen(true);
+   };
+  const handleSignInModalClose = () => {
+    setIsSignInModalOpen(false);
+  };
+
   return (
     <header className="w-full border-b">
       <div className="wrapper flex items-center justify-between">
@@ -17,7 +30,8 @@ const Header = () => {
             alt="Evently logo"
           /> */}
         </Link>
-       <NavBar/>
+        <NavBar onLogInClick={handleSignInModalOpen} />
+        <SignIn isOpen={isSignInModalOpen} onClose={handleSignInModalClose} />
       </div>
     </header>
   );

@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import {
+  GoogleAuthProvider,
+  signInWithPopup,
+  UserCredential,
+} from "firebase/auth";
 import { useRouter } from "next/navigation";
-import { auth } from "@/app/(auth)/firebase/firebaseConfig";
+import { auth, db } from "@/app/(auth)/firebase/firebaseConfig";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { Input, Button } from "@nextui-org/react";
 
 const SignUpForm: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
@@ -14,14 +19,32 @@ const SignUpForm: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
 
   const handleSignUp = async (): Promise<void> => {
     try {
-      const res = await createUserWithEmailAndPassword(email, password);
-      console.log({ res });
+      const res: UserCredential | undefined =
+        await createUserWithEmailAndPassword(email, password);
+
+      if (!res) {
+        throw new Error("Failed to create user");
+      }
+
+      const user = res.user;
+
+      // Add user to Firestore
+      await setDoc(doc(db, "users", user.uid), {
+        displayName: user.displayName || "Anonymous",
+        email: user.email,
+        photoURL: user.photoURL || "",
+        createdAt: serverTimestamp(),
+        lastLogin: serverTimestamp(),
+        role: "user",
+      });
+
       sessionStorage.setItem("user", "true");
       setEmail("");
       setPassword("");
       if (onSuccess) onSuccess();
+      router.push("/"); // Redirect after successful signup
     } catch (e) {
-      console.error(e);
+      console.error("Error signing up:", e);
     }
   };
 
@@ -29,12 +52,28 @@ const SignUpForm: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
     try {
       const provider = new GoogleAuthProvider();
       const res = await signInWithPopup(auth, provider);
-      console.log({ res });
+
+      if (!res) {
+        throw new Error("Failed to sign in with Google");
+      }
+
+      const user = res.user;
+
+      // Add user to Firestore
+      await setDoc(doc(db, "users", user.uid), {
+        displayName: user.displayName || "Anonymous",
+        email: user.email,
+        photoURL: user.photoURL || "",
+        createdAt: serverTimestamp(),
+        lastLogin: serverTimestamp(),
+        role: "user",
+      });
+
       sessionStorage.setItem("user", "true");
       if (onSuccess) onSuccess();
-      router.push("/");
+      router.push("/user-profile"); // Redirect after successful Google sign-in
     } catch (e) {
-      console.error(e);
+      console.error("Error signing in with Google:", e);
     }
   };
 

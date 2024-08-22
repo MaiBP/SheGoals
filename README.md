@@ -53,3 +53,43 @@ Ensure you have the following installed:
 
    ```bash
    git clone https://github.com/your-username/SheGoals.git
+
+```
+shegoals
+├─ app
+│  ├─ (auth)
+│  │  ├─ firebase
+│  │  │  └─ firebaseConfig.js
+│  │  ├─ sign-in
+│  │  │  └─ page.tsx
+│  │  ├─ sign-up
+│  │  │  └─ page.tsx
+│  │  └─ user-profile
+│  │     └─ page.tsx
+│  ├─ (root)
+│  │  ├─ layout.tsx
+│  │  └─ page.tsx
+│  ├─ favicon.ico
+│  ├─ globals.css
+│  ├─ layout.tsx
+│  └─ providers.tsx
+├─ components
+│  ├─ icons
+│  │  ├─ LockIcon.tsx
+│  │  ├─ MailIcon.tsx
+│  │  └─ SearchIcon.tsx
+│  └─ shared
+│     ├─ Footer.tsx
+│     ├─ Header.tsx
+│     └─ Navbar.tsx
+├─ next.config.mjs
+├─ package-lock.json
+├─ package.json
+├─ postcss.config.mjs
+├─ public
+│  ├─ next.svg
+│  └─ vercel.svg
+├─ tailwind.config.ts
+└─ tsconfig.json
+
+```

@@ -19,7 +19,12 @@ import { SearchIcon } from "../icons/SearchIcon";
 import { auth } from "@/app/(auth)/firebase/firebaseConfig"; // Adjust the path based on your structure
 import { onAuthStateChanged, signOut } from "firebase/auth";
 
-const NavBar: React.FC<{ onLogInClick: () => void }> = ({ onLogInClick }) => {
+interface NavBarProps {
+  onLogInClick: () => void;
+  onSignUpClick: () => void;
+}
+
+const NavBar: React.FC<NavBarProps> = ({ onLogInClick, onSignUpClick }) => {
   const [searchActive, setSearchActive] = useState(false);
   const [user, setUser] = useState<any>(null);
 
@@ -126,14 +131,10 @@ const NavBar: React.FC<{ onLogInClick: () => void }> = ({ onLogInClick }) => {
           </Dropdown>
         ) : (
           <>
-            <Button as={Link} href="/sign-up" color="primary">
+            <Button as={Link} onPress={onSignUpClick} color="primary">
               Sign up
             </Button>
-            <Button
-              onPress={onLogInClick}
-              as={Link}
-              color="secondary"
-            >
+            <Button onPress={onLogInClick} as={Link} color="secondary">
               Log in
             </Button>
           </>

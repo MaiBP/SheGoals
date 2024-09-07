@@ -9,10 +9,10 @@ interface UserData {
   email: string;
   photoURL?: string;
   role: string;
-  lastLogin?: any; // Replace 'any' with a specific type like Timestamp if you want more control
+  lastLogin?: any; 
 }
 
-const UserProfile: React.FC = () => {
+const UserProfile = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -36,7 +36,7 @@ const UserProfile: React.FC = () => {
   }, []);
 
   if (loading) {
-    return <p>Loading...</p>; // Or use a spinner or any other loading indicator
+    return <p>Loading...</p>; // I have to add a spinner
   }
 
   if (!userData) {
@@ -71,9 +71,7 @@ const UserProfile: React.FC = () => {
             {userData.lastLogin.toDate().toLocaleString()}
           </p>
         )}
-        <Button color="primary">
-          Edit Profile
-        </Button>
+        <Button color="primary">Edit Profile</Button>
       </div>
     </div>
   );

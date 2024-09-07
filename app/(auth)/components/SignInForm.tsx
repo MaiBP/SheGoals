@@ -5,7 +5,11 @@ import { useRouter } from "next/navigation";
 import { auth } from "@/app/(auth)/firebase/firebaseConfig";
 import { Input, Button } from "@nextui-org/react";
 
-const SignInForm: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
+interface SignInFormProps {
+  onSuccess?: () => void;
+}
+
+const SignInForm = ({ onSuccess }: SignInFormProps) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [signInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth);

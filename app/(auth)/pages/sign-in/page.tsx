@@ -10,10 +10,12 @@ import {
 } from "@nextui-org/react";
 import SignInForm from "@/app/(auth)/components/SignInForm";
 
-const SignIn: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
-  isOpen,
-  onClose,
-}) => {
+interface SignInProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const SignIn = ({ isOpen, onClose }: SignInProps) => {
   return (
     <Modal isOpen={isOpen} onOpenChange={onClose} placement="top-center">
       <ModalContent>

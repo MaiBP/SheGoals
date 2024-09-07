@@ -10,7 +10,11 @@ import { auth, db } from "@/app/(auth)/firebase/firebaseConfig";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { Input, Button } from "@nextui-org/react";
 
-const SignUpForm: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
+interface SignUpFormProps {
+  onSuccess?: () => void;
+}
+
+const SignUpForm = ({ onSuccess }: SignUpFormProps) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [createUserWithEmailAndPassword] =
@@ -42,7 +46,7 @@ const SignUpForm: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
       setEmail("");
       setPassword("");
       if (onSuccess) onSuccess();
-      router.push("/"); // Redirect after successful signup
+      router.push("/"); 
     } catch (e) {
       console.error("Error signing up:", e);
     }
@@ -71,7 +75,7 @@ const SignUpForm: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
 
       sessionStorage.setItem("user", "true");
       if (onSuccess) onSuccess();
-      router.push("/user-profile"); // Redirect after successful Google sign-in
+      router.push("/user-profile"); 
     } catch (e) {
       console.error("Error signing in with Google:", e);
     }

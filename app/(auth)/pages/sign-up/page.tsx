@@ -17,12 +17,7 @@ interface SignUpProps {
   onSwitchToSignIn: () => void; // New prop to switch to the sign-in modal
 }
 
-
-const SignUp: React.FC<SignUpProps> = ({
-  isOpen,
-  onClose,
-  onSwitchToSignIn,
-}) => {
+const SignUp = ({ isOpen, onClose, onSwitchToSignIn }: SignUpProps) => {
   return (
     <Modal isOpen={isOpen} onOpenChange={onClose} placement="top-center">
       <ModalContent>
@@ -33,7 +28,7 @@ const SignUp: React.FC<SignUpProps> = ({
         <ModalHeader className="flex flex-col gap-1">
           Already have an account?{" "}
           <Link href="#" onClick={onSwitchToSignIn}>
-            Log-in
+            Log in
           </Link>
         </ModalHeader>
         <ModalFooter>

@@ -24,14 +24,13 @@ interface NavBarProps {
   onSignUpClick: () => void;
 }
 
-const NavBar: React.FC<NavBarProps> = ({ onLogInClick, onSignUpClick }) => {
+const NavBar = ({ onLogInClick, onSignUpClick }: NavBarProps) => {
   const [searchActive, setSearchActive] = useState(false);
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
-        // console.log(currentUser);
         setUser(currentUser);
       } else {
         setUser(null);

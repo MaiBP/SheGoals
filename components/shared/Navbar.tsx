@@ -30,11 +30,7 @@ const NavBar = ({ onLogInClick, onSignUpClick }: NavBarProps) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser) {
-        setUser(currentUser);
-      } else {
-        setUser(null);
-      }
+      setUser(currentUser || null);
     });
 
     return () => unsubscribe();
@@ -51,21 +47,26 @@ const NavBar = ({ onLogInClick, onSignUpClick }: NavBarProps) => {
         <NavbarBrand className="mr-4">
           <p className="hidden sm:block font-bold text-inherit">SheGoals</p>
         </NavbarBrand>
-        <NavbarContent className="hidden sm:flex gap-3">
-          <NavbarItem>
-            <Link color="foreground" href="/my-events">
-              My Events
-            </Link>
-          </NavbarItem>
-          <NavbarItem>
-            <Link color="foreground" href="/my-team">
-              My Team
-            </Link>
-          </NavbarItem>
-        </NavbarContent>
+
+        {/* Conditionally show links only if the user is authenticated */}
+        {user && (
+          <NavbarContent className="hidden sm:flex gap-3">
+            <NavbarItem>
+              <Link color="foreground" href="/my-events">
+                My Events
+              </Link>
+            </NavbarItem>
+            <NavbarItem>
+              <Link color="foreground" href="/my-team">
+                My Team
+              </Link>
+            </NavbarItem>
+          </NavbarContent>
+        )}
       </NavbarContent>
 
       <NavbarContent as="div" className="items-center" justify="end">
+        {/* Search Bar */}
         <Input
           classNames={{
             base: "max-w-full sm:max-w-[10rem] h-10",
@@ -82,12 +83,13 @@ const NavBar = ({ onLogInClick, onSignUpClick }: NavBarProps) => {
               isActive={searchActive}
               activeColor="blue"
               inactiveColor="gray"
-              onClick={() => setSearchActive(!searchActive)} // Toggle active state
+              onClick={() => setSearchActive(!searchActive)}
             />
           }
           type="search"
         />
 
+        {/* If user is authenticated, show profile dropdown */}
         {user ? (
           <Dropdown placement="bottom-end">
             <DropdownTrigger>
@@ -100,7 +102,7 @@ const NavBar = ({ onLogInClick, onSignUpClick }: NavBarProps) => {
                 src={
                   user.photoURL ||
                   "https://i.pravatar.cc/150?u=a042581f4e29026704d"
-                } // Use user's photo or a default one
+                }
               />
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat">
@@ -130,6 +132,7 @@ const NavBar = ({ onLogInClick, onSignUpClick }: NavBarProps) => {
           </Dropdown>
         ) : (
           <>
+            {/* If user is not authenticated, show Sign up and Log in buttons */}
             <Button as={Link} onPress={onSignUpClick} color="primary">
               Sign up
             </Button>

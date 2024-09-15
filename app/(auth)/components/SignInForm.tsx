@@ -23,7 +23,7 @@ const SignInForm = ({ onSuccess }: SignInFormProps) => {
         setEmail("");
         setPassword("");
         if (onSuccess) onSuccess();
-        router.push("/user-profile"); // Redirect to user profile after successful sign-in
+        router.push("/"); 
       }
     } catch (e) {
       console.error(e);
@@ -37,7 +37,7 @@ const SignInForm = ({ onSuccess }: SignInFormProps) => {
       if (res) {
         sessionStorage.setItem("user", "true");
         if (onSuccess) onSuccess();
-        router.push("/user-profile"); // Redirect to user profile after successful sign-in with Google
+        router.push("/");
       }
     } catch (e) {
       console.error(e);

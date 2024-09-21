@@ -13,6 +13,7 @@ export interface Event {
   category: EventCategory;     // Category of the event (game, tournament, etc.)
   createdAt: Date;             // Event creation timestamp
   updatedAt?: Date;            // Event last updated timestamp
+  imageUrl?: string;
 }
 
 // Defining event categories

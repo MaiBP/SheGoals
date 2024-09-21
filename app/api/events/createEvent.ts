@@ -18,6 +18,7 @@ export const createEvent = async (event: Event) => {
       participants: event.participants || [],
       maxParticipants: event.maxParticipants || 0,
       status: event.status || 'upcoming',
+      imageUrl: event.imageUrl || '',
       createdAt: Timestamp.now(),
     });
     console.log("Event created with ID:", eventRef.id);

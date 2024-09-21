@@ -12,9 +12,11 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "@nextui-org/react";
+import { CameraIcon } from "@/components/icons/CamaraIcon";
 import { now, DateValue, getLocalTimeZone } from "@internationalized/date";
 import { useDateFormatter } from "@react-aria/i18n";
-import { auth } from "@/app/(auth)/firebase/firebaseConfig"; // Import Firebase auth
+import { auth, storage } from "@/app/(auth)/firebase/firebaseConfig"; // Import Firebase auth
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { onAuthStateChanged } from "firebase/auth";
 
 
@@ -34,7 +36,9 @@ const CreateEventPage = () => {
   const [location, setLocation] = useState("");
   const [organizerId, setOrganizerId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-   const [category, setCategory] = useState<string>(""); 
+  const [category, setCategory] = useState<string>("");
+  const [image, setImage] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState<string>("");
   const router = useRouter();
 
   // Listen for auth state changes
@@ -58,6 +62,44 @@ const CreateEventPage = () => {
     timeStyle: "short",
   });
 
+  // // Handle file upload to Firebase Storage
+  // const handleFileUpload = async () => {
+  //   if (imageFile) {
+  //     const storageRef = ref(storage, `event-images/${imageFile.name}`);
+  //     const uploadTask = uploadBytesResumable(storageRef, imageFile);
+  //     return new Promise<string>((resolve, reject) => {
+  //       uploadTask.on(
+  //         "state_changed",
+  //         (snapshot) => {},
+  //         (error) => {
+  //           reject(error);
+  //         },
+  //         () => {
+  //           getDownloadURL(uploadTask.snapshot.ref).then(resolve).catch(reject);
+  //         }
+  //       );
+  //     });
+  //   }
+  //   return null;
+  // };
+
+    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files && e.target.files[0]) {
+        setImage(e.target.files[0]);
+      }
+    };
+
+    const uploadImageToStorage = async () => {
+      if (image) {
+        const imageRef = ref(storage, `event-images/${image.name}`);
+        await uploadBytes(imageRef, image);
+        const downloadURL = await getDownloadURL(imageRef);
+        return downloadURL;
+      }
+      return null;
+    };
+
+
   const handleCreateEvent = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -65,10 +107,16 @@ const CreateEventPage = () => {
       console.error("Organizer ID is missing. User must be logged in.");
       return;
     }
+    // Upload the image first, if an image is selected
+    let imageDownloadUrl = "";
+    if (image) {
+      imageDownloadUrl = (await uploadImageToStorage()) ?? "";
+      setImageUrl(imageDownloadUrl);
+    }
 
     // Convert DateValue to JavaScript Date
     const eventDate = date.toDate(getLocalTimeZone());
-
+    // const imageUrl = await handleFileUpload();
     const eventData = {
       title,
       description,
@@ -76,6 +124,7 @@ const CreateEventPage = () => {
       location,
       category,
       organizerId, // Include the organizerId in the event data
+      imageUrl: imageDownloadUrl,
     };
 
     try {
@@ -154,27 +203,30 @@ const CreateEventPage = () => {
             <DropdownMenu
               aria-label="Select Event Category"
               items={eventCategories}
-              onAction={(key) => setCategory(String(key))} // Cast key to string
+              onAction={(key) => setCategory(String(key))}
             >
               {(item) => (
                 <DropdownItem key={item.key}>{item.label}</DropdownItem>
               )}
             </DropdownMenu>
           </Dropdown>
+          <div className="pl-2" />
+          {/* Hidden File Input */}
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            style={{ display: "none" }} // Hide the default input
+            id="imageUpload"
+          />
+          {/* Button to trigger the file input */}
+          <label htmlFor="imageUpload">
+            <Button as="span" variant="bordered" endContent={<CameraIcon />}>
+              {image ? image.name : "Upload Image"}
+            </Button>
+          </label>
 
-          {/* <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            required
-          >
-            <option value="game">Game</option>
-            <option value="tournament">Tournament</option>
-            <option value="meeting">Meeting Players</option>
-            <option value="tryouts">Tryouts</option>
-            <option value="club event">Club Event</option>
-          </select> */}
-
-          <div className="mb-4" />
+          <div className="mb-2" />
           <Button type="submit" color="primary">
             Create Event
           </Button>

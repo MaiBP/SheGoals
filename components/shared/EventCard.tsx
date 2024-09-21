@@ -6,7 +6,8 @@ interface EventCardProps {
 }
 
 const EventCard = ({ event }: EventCardProps) => {
-
+  const defaultImageUrl =
+    "https://img.freepik.com/premium-photo/capture-excitement-energy-women-soccer-football-ai-generated_705708-30006.jpg";
     const formatDate = (date: any) => {
         const jsDate = new Date(date.seconds * 1000); // Convert Firestore Timestamp to JS Date
         const options: Intl.DateTimeFormatOptions = {
@@ -27,7 +28,7 @@ const EventCard = ({ event }: EventCardProps) => {
         alt={event.title}
         className="object-cover"
         height="200px"
-        src="https://nextui.org/images/hero-card.jpeg"
+        src={event.imageUrl || defaultImageUrl}
         // src={event.imageUrl || "/default-event-image.jpg"} // Add a default image in case event has no image
         width="100%"
       />

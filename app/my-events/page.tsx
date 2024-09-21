@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { Event } from "@/app/models/event";
 import { auth, onAuthStateChanged } from "@/app/(auth)/firebase/firebaseConfig";
 import SignIn from "@/app/(auth)/pages/sign-in/page";
+import EventCard from "@/components/shared/EventCard";
 
 const MyEventsPage = () => {
   const [events, setEvents] = useState<Event[]>([]);
@@ -45,33 +46,13 @@ const MyEventsPage = () => {
     }
   };
 
-  // const formatDate = (date: any) => {
-  //   const jsDate = new Date(date.seconds * 1000); // Convert Firestore Timestamp to JS Date
-  //   console.log(new Date());
-  //   // console.log(jsDate.toLocaleTimeString().slice(0, -3));
-  //   return `${jsDate.toLocaleDateString()} ${jsDate
-  //     .toLocaleTimeString()
-  //     .slice(0, -3)}`;
-  // };
 
-  const formatDate = (date: any) => {
-    const jsDate = new Date(date.seconds * 1000); // Convert Firestore Timestamp to JS Date
-    const options: Intl.DateTimeFormatOptions = {
-      weekday: "short",
-      year: "numeric",
-      month: "short",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true, // Use 24-hour format; set to `true` for 12-hour format
-    };
-    return `${jsDate.toLocaleTimeString([],options )}`;
-  };
+
 
   return (
     <div className="min-h-screen p-6 bg-gray-900">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-white text-3xl mb-4">My Events</h1>
+      <div className="max-w-6xl mx-auto">
+        <h1 className="text-white text-3xl mb-6">My Events</h1>
 
         {/* Create Event Button */}
         <div className="mb-6">
@@ -81,18 +62,9 @@ const MyEventsPage = () => {
         </div>
 
         {/* Events List */}
-        <div className="bg-gray-800 p-6 rounded-lg">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {events.length > 0 ? (
-            events.map((event) => (
-              <div key={event.id} className="mb-4">
-                <h2 className="text-white text-xl">{event.title}</h2>
-                <p className="text-gray-400">{event.description}</p>
-                <p className="text-gray-400">
-                  Date: {formatDate(event.date)}
-                
-                </p>
-              </div>
-            ))
+            events.map((event) => <EventCard key={event.id} event={event} />)
           ) : (
             <p className="text-gray-400">You have no events yet.</p>
           )}

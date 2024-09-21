@@ -2,20 +2,39 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Input, Button, Textarea, DatePicker } from "@nextui-org/react";
+import {
+  Input,
+  Button,
+  Textarea,
+  DatePicker,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+} from "@nextui-org/react";
 import { now, DateValue, getLocalTimeZone } from "@internationalized/date";
 import { useDateFormatter } from "@react-aria/i18n";
 import { auth } from "@/app/(auth)/firebase/firebaseConfig"; // Import Firebase auth
 import { onAuthStateChanged } from "firebase/auth";
+
+
+const eventCategories = [
+  { key: "game", label: "Game" },
+  { key: "tournament", label: "Tournament" },
+  { key: "meeting", label: "Meeting Players" },
+  { key: "tryouts", label: "Tryouts" },
+  { key: "club_event", label: "Club Event" },
+];
+
 
 const CreateEventPage = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState<DateValue>(now(getLocalTimeZone()));
   const [location, setLocation] = useState("");
-  const [category, setCategory] = useState("game");
   const [organizerId, setOrganizerId] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true); // Add a loading state
+  const [loading, setLoading] = useState(true);
+   const [category, setCategory] = useState<string>(""); 
   const router = useRouter();
 
   // Listen for auth state changes
@@ -86,7 +105,7 @@ const CreateEventPage = () => {
   return (
     <div className="min-h-screen p-6">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-white text-3xl mb-6">Create Event</h1>
+        <h1 className="text-3xl mb-6">Create Event</h1>
         <form onSubmit={handleCreateEvent} className="space-y-6">
           <Input
             label="Event Title"
@@ -124,7 +143,26 @@ const CreateEventPage = () => {
             required
           />
 
-          <select
+          <Dropdown>
+            <DropdownTrigger>
+              <Button variant="bordered">
+                {category
+                  ? eventCategories.find((c) => c.key === category)?.label
+                  : "Select Category"}
+              </Button>
+            </DropdownTrigger>
+            <DropdownMenu
+              aria-label="Select Event Category"
+              items={eventCategories}
+              onAction={(key) => setCategory(String(key))} // Cast key to string
+            >
+              {(item) => (
+                <DropdownItem key={item.key}>{item.label}</DropdownItem>
+              )}
+            </DropdownMenu>
+          </Dropdown>
+
+          {/* <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             required
@@ -134,8 +172,9 @@ const CreateEventPage = () => {
             <option value="meeting">Meeting Players</option>
             <option value="tryouts">Tryouts</option>
             <option value="club event">Club Event</option>
-          </select>
+          </select> */}
 
+          <div className="mb-4" />
           <Button type="submit" color="primary">
             Create Event
           </Button>

@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/app/(auth)/firebase/firebaseConfig";
-import { collection, query, where, getDocs, Timestamp, addDoc } from "firebase/firestore";
-import { auth } from "@/app/(auth)/firebase/firebaseConfig";
+import { collection, query, where, getDocs, deleteDoc,updateDoc, doc } from "firebase/firestore";
 import { createEvent } from "./createEvent";
+
+
+
 
 // POST request for creating an event
 export async function POST(req: NextRequest) {

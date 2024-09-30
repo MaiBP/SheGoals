@@ -62,27 +62,6 @@ const CreateEventPage = () => {
     timeStyle: "short",
   });
 
-  // // Handle file upload to Firebase Storage
-  // const handleFileUpload = async () => {
-  //   if (imageFile) {
-  //     const storageRef = ref(storage, `event-images/${imageFile.name}`);
-  //     const uploadTask = uploadBytesResumable(storageRef, imageFile);
-  //     return new Promise<string>((resolve, reject) => {
-  //       uploadTask.on(
-  //         "state_changed",
-  //         (snapshot) => {},
-  //         (error) => {
-  //           reject(error);
-  //         },
-  //         () => {
-  //           getDownloadURL(uploadTask.snapshot.ref).then(resolve).catch(reject);
-  //         }
-  //       );
-  //     });
-  //   }
-  //   return null;
-  // };
-
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
       if (e.target.files && e.target.files[0]) {
         setImage(e.target.files[0]);
